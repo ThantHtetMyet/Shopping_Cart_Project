@@ -1,0 +1,88 @@
+﻿@model GetFreshFood.Models.ID_Quantity
+@using GetFreshFood.Models
+
+@{
+    ViewBag.Title = "PurchaseHistory";
+    Layout = "~/Views/Shared/_GetFreshFoodLayout.cshtml";
+    List<ID_Quantity> total_data = (List<ID_Quantity>)ViewBag.Purchased_Products_List;
+    int counter = 0;
+}
+
+    <div class="row" style="background-color:#6091eb;">
+        <h2 class="text-center">PurchaseHistory</h2>
+    </div>
+<div class="row" style="background-color:#8eb0f1;padding-top:25px;">
+    @foreach (ID_Quantity product_obj in total_data)
+    {
+    <div class="row">
+        <div class="col-md-6 col-sm-6 text-center">
+            <div class="row">
+                <div class="col-md-6 col-sm-6"></div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="thumbnail">
+                        <img src="~/@product_obj.ProductImagePath" id="specific_products" alt="Image" class="img-rounded" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;" />
+                        <div class="caption">
+                            <h3 id="thumbnail-label">
+                                <label id="product_id_label" class="product_id_label"> @product_obj.ProductName</label>
+                            </h3>
+                            @product_obj.ProductDetails
+                            <br />
+                            <button class="btn btn-primary" onclick="">
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+            <div class="col-md-6 col-sm-6 text-center" style="margin-top:10%;">
+                <table class="table-responsive">
+                    <tr>
+                        <td>
+                            <label style="float:left;">Purchased on: </label>
+                        </td>
+                        <td>
+                            @product_obj.ProductPurchasedDate
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label style="float:left;">Quantity: </label>
+                        </td>
+                        <td>
+                            @product_obj.ProductQuantity
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label style="float:left;"> Activation Code:</label>
+                        </td>
+                        <td>
+                            @{
+                                List<string> activation_data = product_obj.ProductActivationCode;
+
+                                if (activation_data.Count == 1)
+                                {
+                                    @activation_data[0]
+                                }
+                                else
+                                {
+                                    <select style="width:350px;">
+                                        @foreach (string temp_data in activation_data)
+                                        {
+                                            <option value="@temp_data">@temp_data</option>
+                                        }
+                                    </select>
+                                }
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        counter++;
+    
+        }
+    </div>

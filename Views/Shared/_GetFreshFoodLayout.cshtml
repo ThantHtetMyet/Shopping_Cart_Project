@@ -1,0 +1,491 @@
+﻿@model GetFreshFood.Models.Customer
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    -->
+
+    <link href="@Url.Content("~/Content/css/Customer.css")" rel="stylesheet" type="text/css" />
+    <style>
+
+        .navbar li a, .navbar .navbar-brand {
+            color: #fff !important;
+        }
+
+        .navbar-nav li a:hover, .navbar-nav li.active a {
+            color: black !important;
+            background-color: #fff !important;
+        }
+
+        .navbar-default .navbar-toggle {
+            border-color: transparent;
+            color: #fff !important;
+        }
+    </style>
+
+    <!-- Login Modal -->
+    <script type="text/javascript">
+        var shopping_cart_data = 0;
+
+        function Update_Cart() {
+            var temp_data = { Id: 1 };
+            // Send JSON data to server's controller-action-method
+            $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateCart",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(temp_data),
+                        dataType: "json",
+
+                        // Response Success
+                        success: function (response) {
+                        document.getElementById("badge_shopping_cart").innerHTML = response.clicked_product_id;
+                        },
+
+                        // Response Fail
+                        failure: function (response) {
+                            alert("Fail Case");
+                        },
+
+                        // Response Error
+                        error: function (response) {
+                            alert("ERROR case");
+                        }
+                    });
+                    
+        }
+
+        // Customer SignUp using AJAX
+        function search_dom_ele(dom_val) {
+            if (dom_val.value == "") {
+                dom_val.style.backgroundColor = "#81F7F3";
+                dom_val.placeholder = "Empty!";
+                dom_val.style.color = "#2E2E2E";
+                return false;
+            }
+            else {
+                dom_val.style.backgroundColor = "white";
+                //dom_val.placeholder = "Empty!";
+                dom_val.style.color = "#000000";
+            }
+            return true;
+        }
+
+        function check_password(password, confirm_passwd) {
+            if (password.value == confirm_passwd.value) {
+                return true;
+            }
+            //alert("Hey.... Mismatch Password Error Show!!!");
+            password.style.backgroundColor = "#81F7F3";
+            password.placeholder = "ERROR";
+            password.value = "";
+            password.style.color = "#2E2E2E";
+
+            confirm_passwd.style.backgroundColor = "#81F7F3";
+            confirm_passwd.placeholder = "ERROR";
+            confirm_passwd.value = "";
+            confirm_passwd.style.color = "#2E2E2E";
+
+            return false;
+        }
+
+        function validateEmail(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (re.test(String(email.value).toLowerCase())) {
+                email.style.backgroundColor = "azure";
+                email.style.color = "#000000";
+                return true;
+            }
+            else {
+                email.style.backgroundColor = "#81F7F3";
+                email.placeholder = email.value;
+                email.value = "";
+                email.style.color = "#2E2E2E";
+                return false;
+            }
+        }
+
+        // SIGN UP function
+        function customer_signup() {
+           // alert("SignUp");
+
+            var flag = false;
+
+            var firstname = document.getElementById("firstname_bx");
+            search_dom_ele(firstname);
+
+            var lastname = document.getElementById("lastname_bx");
+            search_dom_ele(lastname);
+
+            var email = document.getElementById("email_bx");
+            search_dom_ele(email);
+
+            var password = document.getElementById("password_bx");
+            search_dom_ele(password);
+
+            var confirm_password = document.getElementById("confirm_password_bx");
+            search_dom_ele(confirm_password);
+
+            var phone = document.getElementById("phone_bx");
+            search_dom_ele(phone);
+            var birthday = document.getElementById("birthday_bx");
+            search_dom_ele(birthday);
+            var address = document.getElementById("address_bx");
+            search_dom_ele(address);
+
+            var accept_terms_bx = document.getElementById("terms_check_bx");
+
+
+            if (search_dom_ele(firstname) && search_dom_ele(lastname) && search_dom_ele(email) && search_dom_ele(password) && search_dom_ele(confirm_password) && search_dom_ele(phone) && search_dom_ele(birthday) && search_dom_ele(address) && check_password(password, confirm_password) && validateEmail(email)) {
+
+                if (accept_terms_bx.checked) {
+
+                   // alert("Send Data using AJAX");
+                    var firstname_val = firstname.value;
+                    var lastname_val = lastname.value;
+                    var email_val = email.value;
+                    var password_val = password.value;
+                    var phone_val = phone.value;
+                    var birthday_val = birthday.value;
+                    var address_val = address.value;
+
+                    // Logic Tracing...
+                   // alert(firstname_val + " " + lastname_val + " " + email_val + " " + password_val + " " + phone_val + " " + birthday_val + " " + address_val);
+
+                    // Convert a JavaScript object into a string
+                    var customer_data = {
+                        FirstName: firstname_val,
+                        LastName: lastname_val,
+                        password: password_val,
+                        email: email_val,
+                        phone: phone_val,
+                        birthday: birthday_val,
+                        address: address_val
+                    };
+
+                    // Send JSON data to server's controller-action-method
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/SignUp",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(customer_data),
+                        dataType: "json",
+
+                        // Response Success
+                        success: function (response) {
+
+                            //alert("Reply from Server===>");
+                           // alert("Data from Server: " + response.new_user)
+
+                            if (response.new_user == "true") {
+                                var url_data = window.location.href;
+                                //alert(url_data);
+                                var arr = url_data.split("/");
+                                var result = arr[0] + "//" + arr[2];
+                                var Http = new XMLHttpRequest();
+                                Http.responseType = "json";
+                                const url = result + "/Home/Index";
+                                window.location.replace(url);
+                            }
+
+                            // Already Registered Users
+                            else if (response.new_user == "false") {
+                                $('#myModal').modal({
+                                    backdrop: 'static'
+                                });
+                            }
+                        },
+
+                        // Response Fail
+                        failure: function (response) {
+                            alert("Fail Case");
+                        },
+
+                        // Response Error
+                        error: function (response) {
+                            alert("ERROR case");
+                        }
+                    });
+                }
+
+                // Unclick CheckBox
+                else {
+                   // alert("Click Terms and Conditions checkbox")
+                    /*
+                    // Show with Modal Box
+                    var modal_body = document.getElementById("modal-body");
+                    modal_body.innerHTML = "Click Check Box";
+                     $('#myModal').modal({
+                          backdrop: 'static'
+                     });
+                     */
+                    document.getElementById("term_accept_lb").style.color = "red";
+                    document.getElementById("term_accept_lb").innerHTML = "Click!";
+                }
+            }
+
+        }
+
+        // SIGN IN
+        function customer_signin() {
+            //alert("SignIn");
+            var login_email_bx = document.getElementById("login_passwd_bx");
+            var login_passwd_bx = document.getElementById("login_passwd_bx");
+        }
+
+    </script>
+
+    <!-- SEARCH Product -->
+    <script>
+       
+        // Adding Product
+        function Add_to_Cart(product_id) {
+            //alert("Add Cart ( Product ID ) ==>" + product_id);
+
+            var customer_data = {
+                Id: product_id
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/AddCart/",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(customer_data),
+                dataType: "json",
+
+                // Response Success
+                success: function (response) {
+                   // alert("Response from server!");
+                   // alert("###" + response.clicked_product_id);
+
+                    if (response.clicked_product_id != 0) {
+                        // alert("Add:-)");
+                        shopping_cart_data = response.clicked_product_id;
+
+                        document.getElementById("badge_shopping_cart").innerHTML = response.clicked_product_id;
+                        //document.getElementById("shopping_cart_label").value = response.clicked_product_id;
+                    }
+
+                    // Already Registered Users
+                    else if (response.clicked_product_id == 0) {
+                        // alert("SignIn...");
+                        document.getElementById("modal-title").innerHTML = "SignIn";
+                        document.getElementById("modal-body").innerHTML = "Please! SignIn or SignUp";
+                        $('#myModal').modal({
+                            backdrop: 'static'
+                        });
+                    }
+                },
+
+                // Response Fail
+                failure: function (response) {
+                    alert("Fail Case");
+                },
+
+                // Response Error
+                error: function (response) {
+                    alert("ERROR case");
+                }
+            });
+        }
+    </script>
+</head>
+
+<body onload="Update_Cart()">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("G12A", "SearchProduct", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+
+                    <li>@Html.ActionLink("Home", "SearchProduct", "Home")</li>
+                  
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Category <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="background-color:black;">
+                            <li>
+                                <a href="@Url.Action("SpecificLinkSearch", "Home",new { specific_item = "software" })">
+                                    Sofware
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                @{
+                    string registered_user = (string)Session["Registered_User"];
+                    string view_shopping_cart = (string)Session["View_ShoppingCart"];
+                    List<string> shopping_cart_history = (List<string>)Session["clicked_history"];
+
+                    // Registered User!
+                    if (registered_user != null && view_shopping_cart == null)
+                    {
+                                <ul class="nav navbar-nav navbar-right">
+                                    @if ( (string)ViewBag.Purchased_View != "Yes")
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("PurchaseHistory", "Home")">
+                                                MyPurchase
+                                            </a>
+                                        </li>
+
+                                    }
+                                    <li>
+                                        <a href="@Url.Action("Show_Cart_List", "Home")">
+                                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                                            <span class="badge " id="badge_shopping_cart"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("DetailUsers", "Customer")">
+                                            <span class="glyphicon glyphicon-user"></span>
+                                            @registered_user
+                                        </a>
+                                    </li>
+                                    <li>
+                                    <li>
+                                        <a href="@Url.Action("Logout", "Customer")">
+                                            <span class="glyphicon glyphicon-log-out"></span>
+                                            Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                    }
+                    else if (registered_user != null && view_shopping_cart != null && shopping_cart_history.Count != 0)
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="@Url.Action("SpecificLinkSearch", "Home")">
+                                    ContinueShopping
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("BuyProduct", "Home")">
+                                    <span class="glyphicon glyphicon-briefcase"></span>
+                                    Checkout
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("DetailUsers", "Customer")">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    @registered_user
+                                </a>
+                            </li>
+                            <li>
+                            <li>
+                                <a href="@Url.Action("Logout", "Customer")">
+                                    <span class="glyphicon glyphicon-log-out"></span>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                    else if (registered_user != null && view_shopping_cart != null && shopping_cart_history.Count == 0)
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="@Url.Action("SpecificLinkSearch", "Home")">
+                                    ContinueShopping
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("DetailUsers", "Customer")">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    @registered_user
+                                </a>
+                            </li>
+                            <li>
+                            <li>
+                                <a href="@Url.Action("Logout", "Customer")">
+                                    <span class="glyphicon glyphicon-log-out"></span>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="@Url.Action("SignUp", "Customer")">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    SignUp
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("SignIn", "Customer")">
+                                    <span class="glyphicon glyphicon-log-in"></span>
+                                    SignIn
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+    <!-- End of Navigation Bar -->
+
+    <div class="container body-content">
+        @RenderBody()
+
+        <!-- Already Registered User -->
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal" style="top:30%;">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color:#58ACFA;">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="modal-title">SignUp User!</h4>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body" id="modal-body">
+                        Already Registered...
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row" style="background-color:lightgrey;">
+            <footer style="text-align:center;">
+                <p>&copy; @DateTime.Now.Year - Legal Online Shopping Web System</p>
+            </footer>
+        </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

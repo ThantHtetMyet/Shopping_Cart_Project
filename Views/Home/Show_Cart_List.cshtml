@@ -1,0 +1,156 @@
+﻿@model GetFreshFood.Models.OrderedDetails
+@using GetFreshFood.Models
+
+@{
+    ViewBag.Title = "Show_Cart_List";
+    Layout = "~/Views/Shared/_GetFreshFoodLayout.cshtml";
+
+    List<OrderedDetails> ordered_id_quantity_lis = (List<OrderedDetails>)ViewBag.OrderedProductId_Quantity;
+    int counter = 0;
+    int total_price_product = (int)ViewBag.TotalPrice;
+}
+<script>
+
+    /* function */
+    function Change_Product_Quantity(product_id, order_quantity) {
+
+        var change_quantity = document.getElementById("quantity_num_bx " + product_id).value;
+        
+        alert('Thant! Someone Change on "' + product_id + " from " + order_quantity + " to " + change_quantity + '"!');
+        
+        var main_data = {
+            ProductId: product_id,
+            Updated_Quantity: change_quantity,
+            Old_Quantity: order_quantity,
+        };
+
+        // Send JSON data to server's controller-action-method
+        $.ajax({
+            type: "POST",
+            url: "/Home/UpdateCartInfo",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(main_data),
+            dataType: "json",
+
+            // Response Success
+            success: function (response) {
+                //alert("Success Case! Congradulation");
+                //alert(response.total_price);
+                document.getElementById("total_price_id").innerHTML = response.total_price;
+
+            },
+            // Response Fail
+            failure: function (response) {
+                alert("Fail Case");
+            },
+
+            // Response Error
+            error: function (response) {
+                alert("ERROR case");
+            }
+        });
+    }
+</script>
+
+<style>
+
+    #specific_products {
+        -webkit-transition: all 0.7s ease;
+        transition: all 0.7s ease;
+    }
+
+     #specific_products:hover {
+            -webkit-transform: scale(1.3);
+            transform: scale(1.3);
+        }
+
+ .topbar-fixed {
+    position: fixed;
+    top: 7%;
+    left: 0;
+    width: 100%
+}
+</style>
+<div class="row" style="background-color:#6091eb;">
+    @{
+        if ((string)Session["View_ShoppingCart"] == "empty_product_list")
+        {
+            <h3 class="text-center">Empty Ordered Product!</h3>
+        }
+
+        else
+        {
+
+
+            
+            <!--<label class="label label-primary" style="float:right;padding-right:40px;font-size:20px;">-->
+            <div class="topbar-fixed" style="z-index: 100;">
+                <div class="col-sm-11 col-lg-11 col-md-11 " style="text-align:right;">
+                    <label style="color:white;font-size:22px;background-color:blueviolet;width:150px;height:70px;text-align:center;">
+                        TotalPrice:
+                        $<span id="total_price_id" class="total_price_id" style="color:white;font-size:20px;">@total_price_product</span>
+
+                    </label>
+                </div>
+                <div class="col-sm-1 col-lg-1 col-md-1 ">
+                </div>
+            </div>
+            foreach (OrderedDetails temp_data in ordered_id_quantity_lis)
+            {
+                if (counter != 0 && counter % 2 == 0)
+                {
+                @:</div>
+                @:<div class="row" style="background-color:#6091eb">
+                }
+
+                <div class="col-md-12 col-xs-12 text-center" style="padding-top: 50px;">
+                    <div class="col-md-6 col-sm-6 text-center">
+                        <div class="col-md-6 col-sm-6"></div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="thumbnail">
+                                <img src="~/@temp_data.Product_Image_Path" class="specific_products" id="specific_products" alt="Image" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;" />
+
+                                <div class="caption" style="background-color:gainsboro;width:100%;">
+
+                                    <h3 id="thumbnail-label"> <span id="product_id_label" class="product_id_label" value=" @temp_data.ProductId"> </span> @temp_data.Product_Name</h3>
+                                    <label>@temp_data.Product_Details</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6" style="vertical-align:central;">
+
+                        <table class="table-responsive" >
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label>Price:</label>
+                                    </th>
+                                    <th>
+                                        <label>@temp_data.Product_Price</label>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label>Quantity:</label>
+                                    </th>
+                                    <th>
+                                        <input type="number" style="width:60px;text-align:center;" id="quantity_num_bx @temp_data.ProductId" onchange="Change_Product_Quantity(@temp_data.ProductId,@temp_data.Ordered_Quantity)" value="@temp_data.Ordered_Quantity" min="0" />
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                        </table>
+                            
+                        <div class="row">
+                            </div>
+                    </div>
+                </div>
+
+                counter++;
+            }
+
+        }
+
+    }
+</div>

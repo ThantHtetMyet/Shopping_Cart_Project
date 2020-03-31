@@ -1,0 +1,49 @@
+﻿@model GetFreshFood.Models.Customer
+@using GetFreshFood.Models
+
+@{
+    ViewBag.Title = "DetailUsers";
+    Layout = "~/Views/Shared/_GetFreshFoodLayout.cshtml";
+    Customer customer = (Customer)ViewBag.User_Profile;
+}
+
+<div class="row" style="background-color:#6091eb;">
+    <h2 class="text-center">Profile</h2>
+</div>
+<div class="row" style="background-color:#8eb0f1;padding-top:2%;">
+    <table class="table-hover" style="margin:0 auto;width:70%;">
+        <thead>
+            <tr>
+                <th colspan="2" style="text-align:center;">
+                    <img class="img-circle" src="~/Image/Customer/user_image.jpg" style="width:200px;height:200px;" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left;"><h2><i>FirstName:</i></h2></td>
+                <td style="text-align:center;"><h4><i>@customer.FirstName</i></h4></td>
+            </tr>
+            <tr>
+                <td style="text-align:left;"><h2><i>LastName:</i></h2></td>
+                <td style="text-align:center;"><h4><i>@customer.LastName</i></h4></td>
+            </tr>
+            <tr>
+                <td style="text-align:left;"><h2><i>Email:</i></h2></td>
+                <td style="text-align:center;"><h4><i>@customer.email</i></h4></td>
+            </tr>
+            <tr>
+                <td style="text-align:left;"><h2><i>Phone:</i></h2></td>
+                <td style="text-align:center;"><h4><i>@customer.phone</i></h4></td>
+            </tr>
+            <tr>
+                <td style="text-align:left;"><h2><i>Address:</i></h2></td>
+                <td style="text-align:center;"><h4><i>@customer.address</i></h4></td>
+            </tr>
+            <tr>
+                <td style="text-align:left;"><h2><i>BirthDate:</i></h2></td>
+                <td style="text-align:center;"><h4><i>@customer.birthday</i></h4></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

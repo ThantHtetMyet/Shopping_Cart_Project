@@ -1,0 +1,25 @@
+﻿
+    <div class="jumbotron text-center " style="background-color:cornflowerblue;color:#ffffff;">
+        <h1> Group Twelve </h1>
+        <p> Save Time and Money</p>
+
+        <div class="row ">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                @using (Html.BeginForm("SearchProduct", "Home", FormMethod.Post, new { @class = "form-inline" }))
+                {
+                <div class="input-group">
+                    @Html.TextBox("search_bx", null, new { @class = "form-control",placeholder="search", required = "required" })
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-info">
+                            <span class="glyphicon glyphicon-search"></span> 
+                        </button>
+                    </div>
+                    
+                </div>
+                }
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
+        </div>
+   </div>
